@@ -68,7 +68,6 @@ a {
 }
 
 .container {
-    border: solid 1px #ff0000;
     zoom: 1; /* IE6&7 */
 }
 
