@@ -67,3 +67,17 @@ a {
   text-decoration: none;
 }
 
+.container {
+    border: solid 1px #ff0000;
+    zoom: 1; /* IE6&7 */
+}
+
+.container:before,
+.container:after {
+    content: "";
+    display: table;
+}
+
+.container:after {
+    clear: both;
+}
