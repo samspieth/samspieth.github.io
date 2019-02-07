@@ -15,6 +15,11 @@
         	<a href="../index.html">Back</a>
             <h1>Final Project!</h1>
             <p>This page will document my progress as as ideate and prototype my final project for HCDE 439.</p>
-            <p>Right now, I'm trying to get a MIDI input circuit working with a drum machine - it's not going well.</p>
+            <p>Right now, I'm trying to get a MIDI input circuit working with a drum machine - it's not going well. </br></p>
+            <p>I have moved my A4 to a solderable breadboard to create a first prototype for the final project. </br> I have also ordered rigid channels to put my WS2812b RGB LED strips into.</p>
+            <p><img src="439FinalPrototype1.jpg" width=400></p>
+            <p> In this A4 video, the Arduino controlling the LEDs freezes when the entire strip is turned on. I figured out that this was because </br> I was running 5V power into the VIN pin, which requires 7-12V to regulate down to 5. </br> Connecting power to the 5V pin directly works but introduces the risk of plugging in too high voltage power supply.</p>
+            <video controls="controls"
+       		name="Lightshow Video" src="HCDE439A4Vid2.mov"></video>
     </body>
 </html>
