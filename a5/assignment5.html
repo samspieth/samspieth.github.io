@@ -1,0 +1,77 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+        <title>Sam Spieth's HCDE 439 Physical Computing Page!</title> 
+
+        <link href="style.css" media="screen" rel="stylesheet" type="text/css" />
+
+    </head> 
+    <body> 
+
+        <div class="header">
+        	<a href="../index.html">Back</a>
+            <h1>Motors!</h1>
+            <p>Assignment: Create a circuit using a joystick to control a motor. Output motor position to Serial.</p>
+            <p>Image: Circuit<br>This circuit uses a joystick to control the servo motor. </br> The angle of the motor is controlled by the horizontal position of the joystick.</p>
+            <p><img src="HCDE439A5Pic.jpg" width=600></p>
+            <p>Gif: Circuit Operation</p>
+            <p><img src="HCDE439A5Gif.gif" width=400></p>
+            <p>Circuit Schematic<br></p>
+            <p> <img src="HCDE439A5Schematic.jpeg" width=700></p>
+            <p> Code </p>
+            <pre><code>
+//This project enables basic control of a servo motor using a joystick.
+
+//Include necessary libraries
+#include <Servo.h>
+
+//Servo instance
+Servo myServo;
+//Variable for pin numbers
+int joyPin1 = A1;                 // horizontal joystick pin
+int joyPin2 = A2;                 // vertical joystick pin
+int servoPin = 10;
+//Variables for values
+int horizontalVal = 0;            // horizontal joystick value
+int verticalVal = 0;              // vertical joystick value
+
+void setup() {
+  //Serial for debugging
+  Serial.begin(250000);
+  while (!Serial);
+  Serial.println("Serial on");
+  //Initialize servo with pin
+  myServo.attach(servoPin);
+  myServo.write(0);
+}
+
+
+void loop() {
+  // reads the horizontal joystick value
+  horizontalVal = analogRead(joyPin1);
+  // small delay between reading sensors
+  delay(100);
+  // reads the vertical joystick value (unused in this project)
+  verticalVal = analogRead(joyPin2);
+  //Map the horizontal position of the joystick to a new position
+  //for the servo. Josytick values range from 0 to 1024, servo
+  //accepts values from 0 to 180 degrees.
+  int servoPosition = map(horizontalVal,0,1024,0,180);
+  //Write new position to servo
+  myServo.write(servoPosition);
+  //Print values for debugging
+  Serial.println("Horizontal: " + String(horizontalVal));
+  Serial.println("Vertical: " + String(verticalVal));
+  Serial.println("Servo: " + String(myServo.read()));
+  //wait a little longer for servo to catch up
+  delay(200);
+}
+
+            </code></pre>
+        </div>
+        
+    </body>
+</html>
