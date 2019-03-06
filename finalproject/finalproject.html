@@ -38,5 +38,31 @@
 			<p>And this is what they look like lit up.</p>
        		<p><img src="strips_lit_up.JPG" width=400></p>
        		<p><img src="one_strip_lit.JPG" width=400></p>
+       		<p>3/2 - This is an Arduino Mega with the CQRobot DMX Shield and the Spectrum Shield on top of it. </br>
+       		The DMX Shield allows the control of standard stage lighting devices - DMX is the industry standard </br>
+       		communication protocol. However, this shield generated weak DMX data that could not power more than 1 light, </br>
+       		and I have 2 DMX lights (so far).</p>
+       		<p><img src="cqshield.JPG" width=400></p>
+       		<p>These are the DMX lights I am controlling with the Arduino - image from Amazon</br>(https://www.amazon.com/Lixada-Lighting-Professional-Channels-100-240V/dp/B01DXK33FC)</p>
+       		<p><img src="dmxFromAmazon.jpg" width=400></p>
+       		<p>3/5 - Luckily, I was able to get another DMX shield, from Tinkerkit, that solved the issue. </br>
+       		This one didn't come with the DMX connectors attached - I soldered wires to a panel-mount connector, and the </br>
+       		wires are screwed into screw terminals on the "OUT" side of the DMX shield.</p>
+       		<p><img src="tinker_connections.JPG" width=400></p>
+       		<p>3/6 - Finally, all the pieces are in the box. The mounted jacks are: DMX out jack (control spotlights), </br>
+       		MIDI in (receive drum machine data), and DC power. Also coming out of holes in the enclosure are a USB cord </br>
+       		connected to one of the Arduinos, 3 wires to control the LED strips, and a 1/8" audio cable connected to the</br>
+       		spectrum shield. The spectrum shield is connected to one of the outputs of my audio interface, and analyzes the</br>
+       		different frequencies of an audio signal. Currently, the low frequencies are used to control the brightness of the DMX lights.</p>
+       		<p><img src="all_in_box.JPG" width=400></p>
+			<p>After smushing some wires down, the box was finally able to be closed.</p>
+			<p><img src="box_closed.JPG" width=400></p>
+			<p>Here is a simple video of the project functioning. MIDI data from the drum machine/synthesizer, which is </br>
+			creating all the audio heard in the video, controls the LED lights. The DMX lights are programmed to move in time </br>
+			with the MIDI beat and their brightness is controlled by the level of the low audio frequencies.</p>
+			<video controls="controls"
+       		name="Lightshow Video 3" src="box_vid.mov" width=700></video>
+
+       		
     </body>
 </html>
