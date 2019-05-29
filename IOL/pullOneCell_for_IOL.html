@@ -1,0 +1,68 @@
+<html>
+	<head>  		
+  		<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  		
+	</head>
+	
+	<body>
+		<p> This page allows you to get a cell from a Google Sheets file.</p>
+		<p><img src="iol_sheet_screen1.jpeg" width=400></p>
+		<textarea style="width:500px; height: 100; font-size: 12px;" readonly = "true">
+Above is a screengrab of the Sheet that the default ID, '1cbJ3FZkZ22og6977vUJ9ZQTMnoAr6RrDQxfctYfsg4U', links to.
+This Sheet was made to test this webpage. The Sheet must be "Published to Web" to be accesible.
+To use, enter a row and column value and press go.
+		</textarea>
+		</br>
+  		<input id="sID" style="width: 350px;" type="text" value="1cbJ3FZkZ22og6977vUJ9ZQTMnoAr6RrDQxfctYfsg4U" />
+		<input id="r" style="width: 50px;" type="number" placeholder="Row" />
+		<input id="c" style="width: 50px;" type="number" placeholder="Col" />
+		<button onclick="getCell();">Go</button>
+
+		<h3>Results</h3>
+		<div style="margin: 10px;" id="results"></div>
+		
+		<script type="text/javascript">
+//<![CDATA[
+
+    
+getCell = function(){
+    var api = 'https://spreadsheets.google.com/feeds/cells/';
+	var spreadsheet = $('#sID').val();
+    var worksheet =   1;
+    var row =         $('#r').val();
+    var col =         $('#c').val();
+    var url = api+spreadsheet+'/'+worksheet+'/public/basic/R'+row+'C'+col+'?alt=json';
+    $.getJSON(url)
+		.done(function(data){
+        	console.log(data)
+        	if(data.entry){
+				$('#results').prepend(data.entry.title['$t']+': '+data.entry.content['$t']+' <br />');
+            }else{
+                $('#results').prepend('Failed to fetch data <br />');
+            }
+        })
+    	.fail(function(){
+        	$('#results').prepend('Failed to fetch data <br />');
+    	});
+}
+
+
+//]]>
+		</script>
+
+<!--
+		<script>
+    // tell the embed parent frame the height of the content
+    if (window.parent && window.parent.parent){
+      window.parent.parent.postMessage(["resultsFrame", {
+        height: document.body.getBoundingClientRect().height,
+        slug: "0s1xyzcv"
+      }], "*")
+    }
+
+    // always overwrite window.name, in case users try to set it manually
+    window.name = "result"
+  </script> -->
+  	</body>
+</html>
+	
