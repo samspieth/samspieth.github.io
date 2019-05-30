@@ -12,14 +12,15 @@
 		<script>
 			var mqtt
 			var reconnectTimeout = 2000
-			var host="broker.mqttdashboard.com"
-			var port=8000
-			//var port=8883
+			//var host="broker.mqttdashboard.com"
+			var host = "test.mosquitto.org"
+			//var port=8000 //For MQTTDash
+			var port = 8081 //for Mosquitto
 		
 			var topics = ["iol", "iol2"]
 			
 			function onFailure(message) {
-				console.log("Connection Attempt to Host "+host+"Failed: " + message);
+				console.log("Connection Attempt to Host "+host+" failed.");
 				setTimeout(MQTTconnect, reconnectTimeout);
         	}
         
@@ -88,11 +89,13 @@
 	  	
 			function MQTTconnect() {
 				console.log("connecting to "+ host +" "+ port);
-				mqtt = new Paho.MQTT.Client(host,port,"clientjs");
+				mqtt = new Paho.MQTT.Client(host,port,"/wss");
+				
 				var options = {
 					timeout: 3,
 					onSuccess: onConnect,
 					onFailure: onFailure,
+					useSSL: true,
 			 	};
 				mqtt.onMessageArrived = onMessageArrived;
 				mqtt.connect(options); //connect
