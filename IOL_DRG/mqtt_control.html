@@ -36,28 +36,58 @@
 				}
 			}
 			
-			function sendMessage() {
-				messageText = $('#mqttMessageIn').val()
-				topic = $('#mqttTopicIn').val()
+			function sendMessage(messageType) {
+				MQTTconnect() //Make sure connection is established
+				if(messageType==1) { //From "Send MQTT Message panel"
+					messageText = $('#mqttMessageIn').val()
+					topic = $('#mqttTopicIn').val()
+				}
+				if(messageType==2) { //Control individual light
+					onOrOff = $('#indivOnOffIn').val()
+					hueVal = $('#hueIndivIn').val()
+					satVal = $('#satIndivIn').val()
+					briVal = $('#briIndivIn').val()
+					lightNum = $('#indivLightSelect').val()
+					messageText = '{ "Lights" : [{ "' + lightNum+ '" : [{"on" : "' + onOrOff + '", "hue" : "' + hueVal + 
+						'", "sat" : "' + satVal + '", "bri" : "' + briVal + '"}]}]}'
+					topic = "iol"
+				}
+				if(messageType==3) { //Control group of lights
+					onOrOff = $('#groupOnOffIn').val()
+					hueVal = $('#hueGroupIn').val()
+					satVal = $('#satGroupIn').val()
+					briVal = $('#briGroupIn').val()
+					groupNum = $('#groupLightSelect').val()
+					messageText = '{ "Groups" : [{ "' + groupNum+ '" : [{"on" : "' + onOrOff + '", "hue" : "' + hueVal + 
+						'", "sat" : "' + satVal + '", "bri" : "' + briVal + '"}]}]}'
+					topic = "iol"
+				}
+				
+				
 				message = new Paho.MQTT.Message(messageText); //How to make a message
 				message.destinationName = topic; //Set destination of message
-				setTimeout(function(){
-					mqtt.send(message);
-				}, 2000);		 //Send Message
+				message.qfsas = 2
+				setTimeout(function(){ //Wait 3 seconds to make sure connection is good before sending
+					try {
+  						mqtt.send(message);
+						}
+					catch(err) {
+  						$('#mqttMessageIn').innerHTML = err.message;
+					} //Send Message
+				}, 1000);
 				console.log("Message Sent: " + messageText + " to topic: " + topic)
 			}
 			
 			function MQTTsubscribe() {
-				//MQTTconnect()
 				topic = $('#mqttSubscribeTopicIn').val()
 				topics.push(topic)				
 				console.log("Subscribed to MQTT topic: " + topic)
+				MQTTconnect();
 			}
 	  	
 			function MQTTconnect() {
 				console.log("connecting to "+ host +" "+ port);
 				mqtt = new Paho.MQTT.Client(host,port,"clientjs");
-				//document.write("connecting to "+ host);
 				var options = {
 					timeout: 3,
 					onSuccess: onConnect,
@@ -65,11 +95,6 @@
 			 	};
 				mqtt.onMessageArrived = onMessageArrived;
 				mqtt.connect(options); //connect
-			}
-			
-			function controlIndividualLight() {
-				lightNum = $('#indivLightSelect').val()
-				command = 
 			}
 		</script>
 	</head>
@@ -81,7 +106,7 @@
 		<!-- Main Container -->
 		<div class="container"> 
 			<header class="header">
-				<h4 class="logo">HCDE - Iternet of Light DRG</h4>
+				<h4 class="logo">HCDE - Internet of Light DRG</h4>
 			</header>
 			 <!-- Hero Section -->
 			<section class="intro">
@@ -90,8 +115,10 @@
 					<img src="https://images-na.ssl-images-amazon.com/images/I/61HmVvjfBAL._SX425_.jpg" alt="" class="profile">
 				</div>
 				<div class="column">
-					<p>This webpage is a way for us to play around with representing our work online and possible enabling an online control panel. </p>
-					<p>Currently, this webpage has MQTT integrated into it. It can subscribe to topics and update the webpage based on the messages.</p>
+					<p>This webpage is a way for us to play around with representing our work online and to test out an online control panel. </p>
+					<p>This webpage now has MQTT integrated into it. It can subscribe to topics and update the webpage based on the messages. Sending MQTT messages takes a couple seconds. MQTT connection takes a second or two to establish, and must be re-established each time a message is sent for reliability. If we try to send a message before connection is established, it doesn't work. There could be a better way to do this.</p>
+					<p>It is IMPORTANT to use a unique (not something someone else might put) client name for MQTT to avoid being disconnected when someone else connects with that client name.</p>
+					<p>MQTT messages are currently send on the topic "iol". The file "hourglass.py" has been updated to receive and translate MQTT messages into Philips Hue lighting commands using the Python wrapper functions (changeLight and changeGroup).</p>
 				</div>
 			</section>
 			<div class="gallery">
@@ -99,15 +126,15 @@
 				<div class="thumbnail"> <img src="https://hackaday.com/wp-content/uploads/2016/05/mqtt_dash.png" alt="" width="2000" class="cards"/>
 					<h4>MQTT Subscriber</h4>
 					<input id="mqttSubscribeTopicIn" style="width: 100px;" type="text" placeholder="MQTT Topic" />
-					<button onclick="MQTTsubscribe();">Subscribe</button>
-					<p class="text_column">Use this tool to subscribe to new MQTT topics. WHen the page is refreshed, topics reset to default. Default topics are 'iol' and 'iol2.' Try sending a message to one of those topics!</p>
+					<button  class="button" onclick="MQTTsubscribe();">Subscribe</button>
+					<p class="text_column">Use this tool to subscribe to new MQTT topics. When the page is refreshed, topics reset to default. Default topics are 'iol' and 'iol2.' Try sending a message to one of those topics!</p>
 				</div>
 				
 				<div class="thumbnail"> <img src="https://hackaday.com/wp-content/uploads/2016/05/mqtt_dash.png" alt="" width="2000" class="cards"/>
 					<h4>MQTT - Send a message!</h4>
 					<input id="mqttTopicIn" style="width: 100px;" type="text" placeholder="MQTT Topic" />
 					<input id="mqttMessageIn" style="width: 200px;" type="text" placeholder="MQTT Message" />
-					<button onclick="sendMessage();">Send</button>
+					<button  class="button" onclick="sendMessage(1);">Send</button>
 					<p class="text_column">
 						Use this tool to send an MQTT message to any topic.
 					</p>
@@ -124,29 +151,27 @@
 				
 				<div class="thumbnail"><img src="https://images-na.ssl-images-amazon.com/images/I/61HmVvjfBAL._SX425_.jpg" alt="" width="2000" class="cards"/>
 					<h4>Philips Hue Control - Group</h4>
-					<p class="tag">Send commands to groups of lights.</p>
 					<p>Select group number:</p>
 					<select id="groupLightSelect">
 						<option value="0">0 - All Lights</option>
 						<option value="1">1 - Lower Floor</option>
 						<option value="2">2 - Upper Floor</option>
 					</select>
-					<p>Select command:</p>
-					<select id="groupLightSelectCommand">
-						<option value="on">on</option>
-						<option value="hue">hue</option>
-						<option value="bri">bri</option>
-						<option value="sat">sat</option>
+					<p>Group on or off:</p>
+					<select id="groupOnOffIn">
+						<option value="true">Group On</option>
+						<option value="false">Group Off</option>
 					</select>
-					<p>Enter value for command:</p>
-					<input id="mqqtgroupCommandIn" style="width: 100px;" type="text" placeholder="Hue Command Value" />
-					<button onclick="controlGroupLights();">Send</button>
-					<p class="text_column">Use this tool to send commands to groups of lights connected to the Sieg Master bridge. Sends commands using MQTT. Commands are to be received by RPi and translated to light control.</p>
+					<p>Enter HSB Values:</p>
+					<input id="hueGroupIn" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
+					<input id="satGroupIn" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
+					<input id="briGroupIn" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+					<button class="button" onclick="sendMessage(3);">Send</button>
+					<p class="text_column">Send commands to groups of lights connected to the Sieg Master bridge.</p>
 				</div>
 				
 				<div class="thumbnail"> <a href="#"><img src="https://images-na.ssl-images-amazon.com/images/I/61HmVvjfBAL._SX425_.jpg" alt="" width="2000" class="cards"/></a>
 					<h4>Philips Hue Control - Individual</h4>
-					<p class="tag">Send commands to individual lights.</p>
 					<p>Select light number:</p>
 					<select id="indivLightSelect">
 						<option value="22">22</option>
@@ -171,17 +196,17 @@
 						<option value="9">9</option>
 						<option value="17">17</option>
 					</select>
-					<p>Select command:</p>
-					<select id="indivLightSelectCommand">
-						<option value="on">on</option>
-						<option value="hue">hue</option>
-						<option value="bri">bri</option>
-						<option value="sat">sat</option>
+					<p>Light on or off:</p>
+					<select id="indivOnOffIn">
+						<option value="true">Light On</option>
+						<option value="false">Light Off</option>
 					</select>
-					<p>Enter value for command:</p>
-					<input id="mqqtIndivCommandIn" style="width: 100px;" type="text" placeholder="Hue Command Value" />
-					<button onclick="controlIndividualLight();">Send</button>
-					<p class="text_column">Use this tool to send commands to individual lights connected to the Sieg Master bridge. Sends commands using MQTT. Commands are to be received by RPi and translated to light control.</p>
+					<p>Enter HSB Values:</p>
+					<input id="hueIndivIn" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
+					<input id="satIndivIn" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
+					<input id="briIndivIn" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+					<button  class="button" onclick="sendMessage(2);">Send</button>
+					<p class="text_column">Send commands to individual lights connected to the Sieg Master bridge.</p>
 				</div>
 			</div>
 		</div>
