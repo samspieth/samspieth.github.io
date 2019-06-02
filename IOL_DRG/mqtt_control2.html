@@ -23,11 +23,15 @@
 				console.log("Connection Attempt to Host "+host+" failed.");
 				setTimeout(MQTTconnect, reconnectTimeout);
         	}
+			
+			function onSubFail(message) {
+				console.log("Sub fail: " + message.errorMessage);
+			}
         
 			function onMessageArrived(msg){
 				var inMessage = msg.payloadString;
 				var inTopic = msg.destinationName;
-				var out_msg="Message received "+msg.payloadString+", Topic: " + msg.destinationName;
+				var out_msg="Message received "+msg.payloadString+", Topic: " + msg.destinationName + ", DUP: " + msg.duplicate + ", MSG Retained: " + msg.retained;
 				$('#results').prepend("Message: "+msg.payloadString+ ", Topic: " + msg.destinationName + "&#13;&#10;");
 				console.log(out_msg);
 			}
@@ -35,12 +39,16 @@
 	 		function onConnect() {	
 				console.log("Connected ");
 				for (var i = 0; i < topics.length; i++) {
-					mqtt.subscribe(topics[i])
+					var subOptions = {
+						qos: 2,
+						onFailure: onSubFail,
+					};
+					mqtt.subscribe(topics[i], subOptions);
 				}
 			}
 			
 			function sendMessage(messageType) {
-				MQTTconnect() //Make sure connection is established
+				//MQTTconnect() //Make sure connection is established
 				if(messageType==1) { //From "Send MQTT Message panel"
 					messageText = $('#mqttMessageIn').val()
 					topic = $('#mqttTopicIn').val()
@@ -66,18 +74,32 @@
 					topic = "iol"
 				}
 				
-				
-				message = new Paho.MQTT.Message(messageText); //How to make a message
+				try {
+					message = new Paho.MQTT.Message(messageText); //How to make a message
+	
+				}
+				catch (err) {
+					console.log(err);
+				}
 				message.destinationName = topic; //Set destination of message
-				message.qos = 1;
-				setTimeout(function(){ //Wait 3 seconds to make sure connection is good before sending
-					try {
-  						mqtt.send(message);
-						}
-					catch(err) {
-  						$('#mqttMessageIn').innerHTML = err.message;
-					} //Send Message
-				}, 1000);
+				message.qos = 2;
+				//message.retained = true;
+//				setTimeout(function(){ //Wait 3 seconds to make sure connection is good before sending
+//					try {
+//  						//mqtt.send(topic, message, 2);
+//						mqtt.send(message);
+//						}
+//					catch(err) {
+//  						$('#mqttMessageIn').innerHTML = err.message;
+//						console.log(err);
+//					} //Send Message
+//				}, 1000);
+				try {
+					mqtt.send(message);
+				}
+				catch(err) {
+					console.log(err);
+				} //Send Message
 				console.log("Message Sent: " + messageText + " to topic: " + topic)
 			}
 			
@@ -90,6 +112,7 @@
 	  	
 			function MQTTconnect() {
 				client_id = makeid(20)
+				//client_id = "test";
 				console.log("MQTT: Connecting to "+ host +" on port "+ port + ", client ID: " + client_id);
 				mqtt = new Paho.MQTT.Client(host,port,"/wss",client_id);
 				
@@ -99,6 +122,7 @@
 					onFailure: onFailure,
 					useSSL: true,
 			 	};
+				mqtt.onConnectionLost = MQTTconnect;
 				mqtt.onMessageArrived = onMessageArrived;
 				mqtt.connect(options); //connect
 				//console.log(mqtt.clientId);
