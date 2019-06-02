@@ -37,13 +37,20 @@
 			}
 		
 	 		function onConnect() {	
-				console.log("Connected ");
-				for (var i = 0; i < topics.length; i++) {
+				//$('#topics_list') = "";
+				//topics = uniq(topics)
+				unique_topics = uniq(topics)
+				console.log("MQTT Connected");
+				console.log("Unique Topics: " + unique_topics)
+				console.log("Whole topics array: " + topics)
+				//topics_unique = unique(topics);
+				for (var i = 0; i < unique_topics.length; i++) {
 					var subOptions = {
 						qos: 2,
-						onFailure: onSubFail,
-					};
-					mqtt.subscribe(topics[i], subOptions);
+						onFailure : onSubFail,
+					}
+					mqtt.subscribe(unique_topics[i], subOptions);
+					console.log(topics[i]);
 				}
 			}
 			
@@ -93,15 +100,16 @@
 //  						$('#mqttMessageIn').innerHTML = err.message;
 //						console.log(err);
 //					} //Send Message
-//				}, 1000);
+//				}, 1000					console.log(				} //Send Message
 				try {
 					mqtt.send(message);
 				}
 				catch(err) {
 					console.log(err);
 				} //Send Message
-				console.log("Message Sent: " + messageText + " to topic: " + topic)
+				console.log("Message Sent: " + messageText + " to topic: " + topic);
 			}
+							
 			
 			function MQTTsubscribe() {
 				topic = $('#mqttSubscribeTopicIn').val()
@@ -109,13 +117,18 @@
 				console.log("Subscribed to MQTT topic: " + topic)
 				MQTTconnect();
 			}
-	  	
+	 		
 			function MQTTconnect() {
+				
 				client_id = makeid(20)
 				//client_id = "test";
 				console.log("MQTT: Connecting to "+ host +" on port "+ port + ", client ID: " + client_id);
 				mqtt = new Paho.MQTT.Client(host,port,"/wss",client_id);
-				
+				try{
+					mqtt.disconnect();
+				} catch(err) {
+					console.log(err)
+				}
 				var options = {
 					timeout: 3,
 					onSuccess: onConnect,
@@ -133,16 +146,27 @@
    				var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
    				var charactersLength = characters.length;
    				for ( var i = 0; i < length; i++ ) {
-      				result += characters.charAt(Math.floor(Math.random() * charactersLength));
-   				}
-   			return result;
-}
+					result += characters.charAt(Math.floor(Math.random() * charactersLength));
+				}
+			return result;
+			}
+			
+			function uniq(a) {
+    			var seen = {};
+    			return a.filter(function(item) {
+        			return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    			});
+			}
+			
 		</script>
 	</head>
 	<body>
 		<a href="index_IOL.html">Back</a>
 		<script>
+			
 			MQTTconnect();
+			//MQTTsubscribe2("iol");
+			//MQTTsubscribe("iol2");
 			//setInterval(MQTTconnect(), 3000);
 		</script>
 		<!-- Main Container -->
@@ -169,7 +193,8 @@
 					<h4>MQTT Subscriber</h4>
 					<input id="mqttSubscribeTopicIn" style="width: 100px;" type="text" placeholder="MQTT Topic" />
 					<button  class="button" onclick="MQTTsubscribe();">Subscribe</button>
-					<p class="text_column">Use this tool to subscribe to new MQTT topics. When the page is refreshed, topics reset to default. Default topics are 'iol' and 'iol2.' Try sending a message to one of those topics!</p>
+					<p class="text_column">Use this tool to subscribe to new MQTT topics. When the page is refreshed, topics reset to default. Default topics are 'iol' and 'iol2.' Try sending a message to one of those topics! Topics: </p>
+					<textarea rows="5" cols="50" readonly="true" id="topics_list"> </textarea>
 				</div>
 				
 				<div class="thumbnail"> <img src="https://hackaday.com/wp-content/uploads/2016/05/mqtt_dash.png" alt="" width="2000" class="cards"/>
