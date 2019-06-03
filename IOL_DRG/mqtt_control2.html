@@ -316,7 +316,7 @@
 					<input id="mqttSubscribeTopicIn" style="width: 100px;" type="text" placeholder="MQTT Topic" />
 					<button  class="button" onclick="MQTTsubscribe();">Subscribe</button>
 					<p class="text_column">Use this tool to subscribe to new MQTT topics. When the page is refreshed, topics reset to default. Default topics are 'iol' and 'iol2.' Try sending a message to one of those topics! Topics: </p>
-					<textarea rows="5" cols="50" readonly="true" id="topics_list"> </textarea>
+					<!--<textarea rows="5" cols="50" readonly="true" id="topics_list"> </textarea>-->
 				</div>
 				
 				<div class="thumbnail"> <img src="https://hackaday.com/wp-content/uploads/2016/05/mqtt_dash.png" alt="" width="2000" class="cards"/>
@@ -330,7 +330,7 @@
 				</div>
 				
 				<div class="thumbnail">
-					<!--<textarea rows="20" cols="50" readonly="true" id="results"> </textarea>-->
+					<textarea rows="20" cols="50" readonly="true" id="results"> </textarea>
 					<!--<div style="margin: 10px;" id="results"></div>-->
 					<h4>MQTT Monitor</h4>
 					<p> View incoming MQTT messages on topics that the webpage is subscribed to. 
