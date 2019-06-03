@@ -130,6 +130,16 @@
 					topic = "iol"
 				}
 				
+				if(messageType == 5) { //TODO: Send light palette to upper floor
+					
+				}
+				
+				if(messageType == 6) { //WIP: Send palette change notification to MQTT/hourglass
+					palette_name = $('#paletteNameIn').val()
+					messageText = '{ "Palette" : "' + palette_name + '"}'
+					topic = "iol"
+				}
+				
 				try {
 					message = new Paho.MQTT.Message(messageText); //How to make a message
 	
@@ -207,13 +217,6 @@
     			});
 			}
 			
-			function postPaletteToSheets(){
-				spreadsheet_id = "1cbJ3FZkZ22og6977vUJ9ZQTMnoAr6RrDQxfctYfsg4U" 
-				url = "https://sheets.googleapis.com/v4/spreadsheets/" + spreadsheet_id + "/values:batchUpdate"
-				
-				
-			}
-			
 			function saveLowerPalette(){
 				h22 = $('#22h').val()
 				s22 = $('#22s').val()
@@ -256,7 +259,8 @@
 				
 				request_url = "https://script.google.com/macros/s/AKfycbzYUe2N6TgZ4cmyrga_NEAJWkpXntFaQckJH1pBpE66s7HmCuM/exec"
 				
-				data_string = 'PaletteName=' + name + '&Light 22 H=' + h22 + '&Light 22 S=' + s22 + '&Light 22 B=' + b22 + '&Light 15 H=' + h15 + '&Light 15 S=' + s15 + '&Light 15 B=' + b15 + '&Light 10 H=' + h10 + '&Light 10 S=' + s10 + '&Light 10 B=' + b10 + '&Light 21 H=' + h21 + '&Light 21 S=' + s21 + '&Light 21 B=' + b21 + '&Light 7 H=' + h7 + '&Light 7 S=' + s7 + '&Light 7 B=' + b7 + '&Light 23 H=' + h23 + '&Light 23 S=' + s23 + '&Light 23 B=' + b23 + '&Light 16 H=' + h16 + '&Light 16 S=' + s16 + '&Light 16 B=' + b16 + '&Light 14 H=' + h14 + '&Light 14 S=' + s14 + '&Light 14 B=' + b14 + '&Light 11 H=' + h11 + '&Light 11 S=' + s11 + '&Light 11 B=' + b11
+				data_string = 'PaletteName=' + name + '&Area=Lower&Light 22 H=' + h22 + '&Light 22 S=' + s22 + '&Light 22 B=' + b22 + '&Light 15 H=' + h15 + '&Light 15 S=' + s15 + '&Light 15 B=' + b15 + '&Light 10 H=' + h10 + '&Light 10 S=' + s10 + '&Light 10 B=' + b10 + '&Light 21 H=' + h21 + '&Light 21 S=' + s21 + '&Light 21 B=' + b21 + '&Light 7 H=' + h7 + '&Light 7 S=' + s7 + '&Light 7 B=' + b7 + '&Light 23 H=' + h23 + '&Light 23 S=' + s23 + '&Light 23 B=' + b23 + '&Light 16 H=' + h16 + '&Light 16 S=' + s16 + '&Light 16 B=' + b16 + '&Light 14 H=' + h14 + '&Light 14 S=' + s14 + '&Light 14 B=' + b14 + '&Light 11 H=' + h11 + '&Light 11 S=' + s11 + '&Light 11 B=' + b11
+				
 				request = $.ajax({
 					//This Google Sheets macro URL was generated using https://script.google.com
 					//It runs on the Google sheet that can be found at https://docs.google.com/spreadsheets/d/1cbJ3FZkZ22og6977vUJ9ZQTMnoAr6RrDQxfctYfsg4U/
@@ -278,12 +282,8 @@
 						data: data_string
 					});
 				});
-			}
-			
+			}		
 		</script>
-	
-		
-		
 	</head>
 	<body>
 		<a href="index_IOL.html">Back</a>
@@ -462,7 +462,14 @@
 					<button class="button" onclick="saveLowerPalette()">Save to Sheets</button>
 				</div>
 				
-				
+				<div class="thumbnail"> <img src="https://hackaday.com/wp-content/uploads/2016/05/mqtt_dash.png" alt="" width="2000" class="cards"/>
+					<h4>Push Light Palettes!</h4>
+					<input id="paletteNameIn" style="width: 100px;" type="text" placeholder="Palette Name" />
+					<button  class="button" onclick="sendMessage(6);">Send</button>
+					<p class="text_column" style="word-wrap:break-word;">
+						Push light palettes from the Google Sheet (https://docs.google.com/spreadsheets/d/1cbJ3FZkZ22og6977vUJ9ZQTMnoAr6RrDQxfctYfsg4U). Reference palettes by their name in the sheet. Please don't add duplicate names.
+					</p>
+				</div>		
 			</div>
 		</div>
 	<!-- Main Container Ends -->
