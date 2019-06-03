@@ -42,7 +42,7 @@
 			}
 		
 	 		function onConnect() {	
-				//$('#topics_list') = "";
+				$('#topics_list').innerHTML = "";
 				//topics = uniq(topics)
 				unique_topics = uniq(topics)
 				console.log("MQTT Connected");
@@ -56,6 +56,7 @@
 					}
 					mqtt.subscribe(unique_topics[i], subOptions);
 					console.log(topics[i]);
+					$('#topics_list').prepend(topics[i] + "&#13;&#10;")
 				}
 			}
 			
@@ -316,7 +317,7 @@
 					<input id="mqttSubscribeTopicIn" style="width: 100px;" type="text" placeholder="MQTT Topic" />
 					<button  class="button" onclick="MQTTsubscribe();">Subscribe</button>
 					<p class="text_column">Use this tool to subscribe to new MQTT topics. When the page is refreshed, topics reset to default. Default topics are 'iol' and 'iol2.' Try sending a message to one of those topics! Topics: </p>
-					<!--<textarea rows="5" cols="50" readonly="true" id="topics_list"> </textarea>-->
+					<textarea rows="5" cols="40" readonly="true" id="topics_list"> </textarea>
 				</div>
 				
 				<div class="thumbnail"> <img src="https://hackaday.com/wp-content/uploads/2016/05/mqtt_dash.png" alt="" width="2000" class="cards"/>
@@ -404,57 +405,57 @@
 					<form id="doof">
 					<div class="light_thumbnail">
 						22:
-						<input id="22h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="22s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="22b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="22h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="22s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="22b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						15:
-						<input id="15h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="15s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="15b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="15h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="15s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="15b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						10:
-						<input id="10h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="10s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="10b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="10h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="10s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="10b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						21:
-						<input id="21h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="21s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="21b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="21h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="21s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="21b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						7:
-						<input id="7h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="7s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="7b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="7h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="7s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="7b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						23:
-						<input id="23h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="23s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="23b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="23h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="23s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="23b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						16:
-						<input id="16h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="16s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="16b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="16h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="16s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="16b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						14:
-						<input id="14h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="14s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="14b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="14h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="14s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="14b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					<div class="light_thumbnail">
 						11:
-						<input id="11h" style="width: 100px;" type="text" placeholder="Hue (0-65535)" />
-						<input id="11s" style="width: 100px;" type="text" placeholder="Sat (0-254)" />
-						<input id="11b" style="width: 100px;" type="text" placeholder="Bri (1-254)" />
+						<input id="11h" class="paletteGridSectionTextEntry" type="text" placeholder="Hue (0-65535)" />
+						<input id="11s" class="paletteGridSectionTextEntry" type="text" placeholder="Sat (0-254)" />
+						<input id="11b" class="paletteGridSectionTextEntry" type="text" placeholder="Bri (1-254)" />
 					</div>
 					</form>
 					<button class="button" onclick="sendMessage(4);">Push to Lights</button>
